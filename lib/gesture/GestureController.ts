@@ -74,7 +74,12 @@ export class GestureController implements IGestureController {
     const pointingEvent = landmarks
       ? this.pointingDetector.addSample(landmarks, timestampMs)
       : this.pointingDetector.noHand();
-    if (pointingEvent) this.emit(pointingEvent);
+    if (pointingEvent) {
+      if (process.env.NODE_ENV !== "production" && (pointingEvent.type === "next" || pointingEvent.type === "previous")) {
+        console.debug(`[gesture-debug] detector fired: ${pointingEvent.type} @ ${Math.round(timestampMs)}ms`);
+      }
+      this.emit(pointingEvent);
+    }
 
     if (landmarks && this.crossedFingersDetector.addSample(landmarks, timestampMs)) {
       this.emit({ type: "laser-toggle" });

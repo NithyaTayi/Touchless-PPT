@@ -66,29 +66,47 @@ export default function Home() {
     (e: GestureEvent) => {
       switch (e.type) {
         case "next":
-          next();
-          showToast("Next");
+          if (process.env.NODE_ENV !== "production") {
+            console.debug(`[gesture-debug] page received: next (currentIndex=${currentIndex}, total=${total})`);
+          }
+          if (currentIndex < total - 1) {
+            next();
+            showToast("Next");
+          }
           break;
         case "previous":
-          prev();
-          showToast("Previous");
+          if (process.env.NODE_ENV !== "production") {
+            console.debug(`[gesture-debug] page received: previous (currentIndex=${currentIndex}, total=${total})`);
+          }
+          if (currentIndex > 0) {
+            prev();
+            showToast("Previous");
+          }
           break;
         case "jump-first":
-          goTo(0);
-          showToast("First slide");
+          if (currentIndex > 0) {
+            goTo(0);
+            showToast("First slide");
+          }
           break;
         case "jump-last":
-          goTo(total - 1);
-          showToast("Last slide");
+          if (currentIndex < total - 1) {
+            goTo(total - 1);
+            showToast("Last slide");
+          }
           break;
         case "presentation-enter":
-          setIsPresenting(true);
-          setLaserEnabled(false);
-          showToast("Presenting");
+          if (!isPresenting) {
+            setIsPresenting(true);
+            setLaserEnabled(false);
+            showToast("Presenting");
+          }
           break;
         case "presentation-exit":
-          exitPresenting();
-          showToast("Exited presenting");
+          if (isPresenting) {
+            exitPresenting();
+            showToast("Exited presenting");
+          }
           break;
         case "blackout-toggle":
           setIsBlackout((p) => !p);
@@ -117,7 +135,7 @@ export default function Home() {
           break;
       }
     },
-    [next, prev, goTo, total, exitPresenting, isPresenting, laserEnabled, containerRef, showToast],
+    [next, prev, goTo, total, currentIndex, exitPresenting, isPresenting, laserEnabled, containerRef, showToast],
   );
 
   useGestureController(videoEl, camera.state === "granted", handleGestureEvent);

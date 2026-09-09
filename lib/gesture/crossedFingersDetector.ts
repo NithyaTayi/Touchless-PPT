@@ -57,10 +57,15 @@ export class CrossedFingersDetector {
     }
 
     if (this.streak < CROSS_HOLD_FRAMES || this.currentState === this.stableState) return false;
-    this.stableState = this.currentState;
 
-    if (!crossed || timestampMs < this.cooldownUntil) return false;
+    if (!crossed) {
+      this.stableState = false;
+      return false;
+    }
 
+    if (timestampMs < this.cooldownUntil) return false;
+
+    this.stableState = true;
     this.cooldownUntil = timestampMs + CROSS_COOLDOWN_MS;
     return true;
   }

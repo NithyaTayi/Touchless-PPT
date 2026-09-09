@@ -117,10 +117,9 @@ export class PointingDetector {
     }
 
     if (this.streak < POINT_HOLD_FRAMES || direction === this.stableDirection) return null;
-
-    this.stableDirection = direction;
     if (timestampMs < this.cooldownUntil) return null;
 
+    this.stableDirection = direction;
     this.cooldownUntil = timestampMs + POINT_COOLDOWN_MS;
     return direction === "Right" ? { type: "next" } : { type: "previous" };
   }

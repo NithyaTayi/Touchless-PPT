@@ -27,10 +27,9 @@ export class StaticGestureDetector {
     }
 
     if (this.streak < GESTURE_HOLD_FRAMES || category === this.stableCategory) return null;
+    if (timestampMs < this.cooldownUntil) return null;
 
     this.stableCategory = category;
-
-    if (timestampMs < this.cooldownUntil) return null;
 
     let event: StaticEvent | null = null;
     if (category === "Thumb_Up") event = "jump-first";
