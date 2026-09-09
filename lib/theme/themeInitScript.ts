@@ -4,10 +4,8 @@
 // hydrates — avoids a flash of the wrong theme. Falls back to OS preference
 // when no explicit choice has been saved yet.
 //
-// Kept in its own module (rather than inlined in app/layout.tsx) so that
-// next.config.ts can hash this exact string into the Content-Security-Policy
-// script-src allowlist — editing this file automatically updates the CSP
-// hash, instead of a hand-maintained hash silently going stale.
+// Kept in its own module (rather than inlined in app/layout.tsx) as a
+// single source of truth, in case it's ever reused elsewhere.
 export const THEME_INIT_SCRIPT = `
 (function () {
   try {
