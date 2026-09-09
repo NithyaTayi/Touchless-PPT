@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf8f3; /* paper */
+  --foreground: #14130f; /* ink */
+  --color-surface: #ece8de; /* mist */
+  --color-surface-border: #ddd7c8;
+  --color-accent: #c9781e; /* ember, darkened for AA contrast on paper */
+  --color-accent-soft: #e8a33d1a;
+  --color-signal: #3f8763; /* darkened for AA contrast on paper */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--color-surface);
+  --color-surface-border: var(--color-surface-border);
+  --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-signal: var(--color-signal);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-space-grotesk);
 }
 
+/* No-JS fallback: honors OS preference when the toggle script hasn't run
+   yet or is disabled. The inline script in layout.tsx sets .dark/.light on
+   <html> before paint, which takes precedence via source order below. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not(.light) {
+    --background: #14130f; /* ink */
+    --foreground: #f2efe6;
+    --color-surface: #211f18; /* graphite */
+    --color-surface-border: #34311f;
+    --color-accent: #e8a33d; /* ember */
+    --color-accent-soft: #e8a33d26;
+    --color-signal: #6fc79a;
   }
+}
+
+:root.dark {
+  --background: #14130f; /* ink */
+  --foreground: #f2efe6;
+  --color-surface: #211f18; /* graphite */
+  --color-surface-border: #34311f;
+  --color-accent: #e8a33d; /* ember */
+  --color-accent-soft: #e8a33d26;
+  --color-signal: #6fc79a;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  color-scheme: light dark;
+}
+
+:root.dark body {
+  color-scheme: dark;
+}
+
+:root.light body {
+  color-scheme: light;
+}
+
+@keyframes gesture-toast {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 6px);
+  }
+  15%,
+  80% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
 }
